@@ -65,8 +65,8 @@ public class Main {
 
         System.out.println();
 
-        System.out.println("[Test] ReizigerDAO.update() met nieuwe date voor reiziger met id 1");
-        Reiziger r2 = new Reiziger(1, "L", null, "Koppes", java.sql.Date.valueOf("2003-01-07"));
+        System.out.println("[Test] ReizigerDAO.update() met nieuwe data voor reiziger met id 1");
+        Reiziger r2 = new Reiziger(1, "A", null, "Koppes", java.sql.Date.valueOf("2003-01-07"));
         rdao.update(r2);
         r2 = rdao.findById(id);
         System.out.println(r2);
