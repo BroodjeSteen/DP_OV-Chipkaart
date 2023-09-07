@@ -4,6 +4,8 @@ import domein.Reiziger;
 
 import java.lang.reflect.Array;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,13 +46,32 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public boolean update(Reiziger reiziger) {
-        return false;
+    public boolean update(Reiziger reiziger) throws SQLException {
+        String updateQuery = "UPDATE reiziger SET voorletters = ?, tussenvoegsel = ?, achternaam = ?, geboortedatum = ? WHERE reiziger_id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
+
+        preparedStatement.setString(1, reiziger.getVoorletters());
+        preparedStatement.setString(2, reiziger.getTussenvoegsel());
+        preparedStatement.setString(3, reiziger.getAchternaam());
+        preparedStatement.setDate(4, new java.sql.Date(reiziger.getGeboortedatum().getTime()));
+        preparedStatement.setInt(5, reiziger.getReizigerId());
+
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        return rowsAffected > 0;
     }
 
     @Override
-    public boolean delete(Reiziger reiziger) {
-        return false;
+    public boolean delete(Reiziger reiziger) throws SQLException {
+        String deleteQuery = "DELETE FROM reiziger WHERE reiziger_id = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
+        preparedStatement.setInt(1, reiziger.getReizigerId());
+
+        int rowsDeleted = preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        return rowsDeleted > 0;
     }
 
     @Override
@@ -70,11 +91,11 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public List<Reiziger> findByGbdatum(String datum) throws SQLException {
-        String query = "SELECT * FROM reiziger WHERE geboortedatum = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(query);
-        Date date = new Date(1);
-        preparedStatement.setDate(1, date);
+    public List<Reiziger> findByGbdatum(String datum) throws SQLException, ParseException {
+        String selectQuery = "SELECT * FROM reiziger WHERE geboortedatum = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(selectQuery);
+
+        preparedStatement.setDate(1, java.sql.Date.valueOf(datum));
 
         List<Reiziger> reizigers = new ArrayList<>();
 

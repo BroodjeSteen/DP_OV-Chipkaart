@@ -38,7 +38,8 @@ public class Reiziger {
     }
 
     public String toString() {
-        return String.format("Reiziger ID: %d%nVoorletters: %s%nTussenvoegsel: %s%nAchternaam: %s%nGeboortedatum: %s%n",
+        String tussenvoegsel = this.tussenvoegsel == null ? "" : " " + this.tussenvoegsel;
+        return String.format("#%s %s.%s %s, geboren op %s",
                 reizigerId, voorletters, tussenvoegsel, achternaam, geboortedatum);
     }
 }
