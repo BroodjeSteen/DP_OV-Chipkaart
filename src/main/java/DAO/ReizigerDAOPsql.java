@@ -18,31 +18,26 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public boolean save(Reiziger reiziger) {
-        try {
-            // Create a PreparedStatement for the INSERT statement
-            String insertQuery = "INSERT INTO reiziger (reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
+    public boolean save(Reiziger reiziger) throws SQLException {
+        // Create a PreparedStatement for the INSERT statement
+        String insertQuery = "INSERT INTO reiziger (reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
 
-            // Set the values for the placeholders in the SQL statement
-            preparedStatement.setInt(1, reiziger.getReizigerId());
-            preparedStatement.setString(2, reiziger.getVoorletters());
-            preparedStatement.setString(3, reiziger.getTussenvoegsel());
-            preparedStatement.setString(4, reiziger.getAchternaam());
-            preparedStatement.setDate(5, new java.sql.Date(reiziger.getGeboortedatum().getTime()));
+        // Set the values for the placeholders in the SQL statement
+        preparedStatement.setInt(1, reiziger.getReizigerId());
+        preparedStatement.setString(2, reiziger.getVoorletters());
+        preparedStatement.setString(3, reiziger.getTussenvoegsel());
+        preparedStatement.setString(4, reiziger.getAchternaam());
+        preparedStatement.setDate(5, new java.sql.Date(reiziger.getGeboortedatum().getTime()));
 
-            // Execute the INSERT statement
-            int rowsInserted = preparedStatement.executeUpdate();
+        // Execute the INSERT statement
+        int rowsInserted = preparedStatement.executeUpdate();
 
-            // Close the PreparedStatement
-            preparedStatement.close();
+        // Close the PreparedStatement
+        preparedStatement.close();
 
-            // Return true if at least one row was inserted
-            return rowsInserted > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        // Return true if at least one row was inserted
+        return rowsInserted > 0;
     }
 
     @Override

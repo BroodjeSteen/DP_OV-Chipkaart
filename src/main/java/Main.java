@@ -1,3 +1,6 @@
+import DAO.AdresDAO;
+import DAO.AdresDAOPsql;
+import domein.Adres;
 import domein.Reiziger;
 
 import DAO.ReizigerDAO;
@@ -13,7 +16,9 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, ParseException {
         ReizigerDAOPsql rdao = new ReizigerDAOPsql(getConnection());
-        testReizigerDAO(rdao);
+        AdresDAOPsql adao = new AdresDAOPsql(getConnection());
+        // testReizigerDAO(rdao);
+        testAdresDAO(adao);
     }
 
     private static Connection getConnection() throws SQLException {
@@ -77,5 +82,12 @@ public class Main {
         rdao.delete(sietske);
         reizigers = rdao.findAll();
         System.out.println(reizigers.size() + " reizigers\n");
+    }
+
+    public static void testAdresDAO(AdresDAO adao) throws SQLException {
+        Adres testAdres = new Adres(1, "1234AA", "1", "Kaasstraat", "Kaasstad", 1);
+
+        System.out.println("\n---------- Test AdresDAO -------------");
+
     }
 }
