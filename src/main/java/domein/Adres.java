@@ -6,15 +6,15 @@ public class Adres {
     private String huisnummer;
     private String straat;
     private String woonplaats;
-    private int reizigerId;
+    private Reiziger reiziger;
 
-    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, int reizigerId) {
+    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, Reiziger reiziger) {
         this.id = id;
         this.postcode = postcode;
         this.huisnummer = huisnummer;
         this.straat = straat;
         this.woonplaats = woonplaats;
-        this.reizigerId = reizigerId;
+        this.reiziger = reiziger;
     }
 
     public int getId() {
@@ -37,11 +37,17 @@ public class Adres {
         return woonplaats;
     }
 
+    public Reiziger getReiziger() {
+        return reiziger;
+    }
+
     public int getReizigerId() {
-        return reizigerId;
+        return reiziger.getReizigerId();
     }
 
     public String toString() {
-        return String.format("#%s %s-%s", id, postcode, huisnummer);
+        String tussenvoegsel = getReiziger().getTussenvoegsel() == null ? "" : " " + getReiziger().getTussenvoegsel();
+        return String.format("Reiziger {#%s %s.%s %s, geb. %s, Adres {#%s %s-%s}}",
+                getReizigerId(), getReiziger().getVoorletters(), tussenvoegsel, getReiziger().getAchternaam(), getReiziger().getGeboortedatum(), id, postcode, huisnummer);
     }
 }

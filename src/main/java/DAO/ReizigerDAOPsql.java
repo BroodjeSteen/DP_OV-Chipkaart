@@ -2,41 +2,34 @@ package DAO;
 
 import domein.Reiziger;
 
-import java.lang.reflect.Array;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ReizigerDAOPsql implements ReizigerDAO {
-    private Connection conn;
+    private final Connection conn;
+    private AdresDAOPsql adao;
 
-    public ReizigerDAOPsql(Connection conn) {
+    public ReizigerDAOPsql(Connection conn, AdresDAOPsql adao) {
         this.conn = conn;
+        this.adao = adao;
     }
 
     @Override
     public boolean save(Reiziger reiziger) throws SQLException {
-        // Create a PreparedStatement for the INSERT statement
         String insertQuery = "INSERT INTO reiziger (reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
 
-        // Set the values for the placeholders in the SQL statement
         preparedStatement.setInt(1, reiziger.getReizigerId());
         preparedStatement.setString(2, reiziger.getVoorletters());
         preparedStatement.setString(3, reiziger.getTussenvoegsel());
         preparedStatement.setString(4, reiziger.getAchternaam());
         preparedStatement.setDate(5, new java.sql.Date(reiziger.getGeboortedatum().getTime()));
 
-        // Execute the INSERT statement
         int rowsInserted = preparedStatement.executeUpdate();
 
-        // Close the PreparedStatement
         preparedStatement.close();
 
-        // Return true if at least one row was inserted
         return rowsInserted > 0;
     }
 
@@ -61,6 +54,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     public boolean delete(Reiziger reiziger) throws SQLException {
         String deleteQuery = "DELETE FROM reiziger WHERE reiziger_id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
+
         preparedStatement.setInt(1, reiziger.getReizigerId());
 
         int rowsDeleted = preparedStatement.executeUpdate();
@@ -86,7 +80,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public List<Reiziger> findByGbdatum(String datum) throws SQLException, ParseException {
+    public List<Reiziger> findByGbdatum(String datum) throws SQLException {
         String selectQuery = "SELECT * FROM reiziger WHERE geboortedatum = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(selectQuery);
 

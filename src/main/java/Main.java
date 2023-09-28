@@ -15,9 +15,11 @@ public class Main {
     private static Connection connection;
 
     public static void main(String[] args) throws SQLException, ParseException {
-        ReizigerDAOPsql rdao = new ReizigerDAOPsql(getConnection());
-        AdresDAOPsql adao = new AdresDAOPsql(getConnection());
-        // testReizigerDAO(rdao);
+        AdresDAOPsql adao = null;
+        ReizigerDAOPsql rdao = new ReizigerDAOPsql(getConnection(), adao);
+        adao = new AdresDAOPsql(getConnection(), rdao);
+
+        //testReizigerDAO(rdao);
         testAdresDAO(adao);
     }
 
@@ -47,6 +49,8 @@ public class Main {
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
         Reiziger sietske = new Reiziger(77, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        Adres adres = new Adres(77, "9876ZZ", "14A", "Hamburgerweg", "Duckstad", sietske);
+        sietske.setAdres(adres);
         System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
         rdao.save(sietske);
         reizigers = rdao.findAll();
@@ -58,8 +62,8 @@ public class Main {
         int id = 1;
         Reiziger r1 = rdao.findById(id);
         System.out.println(r1);
-        System.out.println();
 
+        System.out.println();
 
         System.out.println("[Test] ReizigerDAO.findByGbdatum() met geboortedatum = 2002-12-03 geeft de volgende reiziger(s):");
         String datum = "2002-12-03";
@@ -85,9 +89,35 @@ public class Main {
     }
 
     public static void testAdresDAO(AdresDAO adao) throws SQLException {
-        Adres testAdres = new Adres(1, "1234AA", "1", "Kaasstraat", "Kaasstad", 1);
+        Reiziger testReiziger = new Reiziger(6, "A", null, "Koppes", java.sql.Date.valueOf("2003-01-07"));
+        Adres testAdres = new Adres(6, "1234AA", "69", "Wegweg", "Zeewolde", testReiziger);
 
-        System.out.println("\n---------- Test AdresDAO -------------");
+        System.out.println("\n---------- Test ReizigerDAO -------------");
 
+        List<Adres> adressen = adao.findAll();
+        System.out.println("[Test] AdresDAO.findAll() geeft de volgende adressen:");
+        for (Adres adres : adressen) System.out.println(adres);
+
+        System.out.println();
+
+        System.out.print("[Test] Eerst " + adressen.size() + " adressen, na AdresDAO.save() ");
+        adao.save(testAdres);
+        adressen = adao.findAll();
+        System.out.println(adressen.size() + " reizigers\n");
+
+        System.out.print("[Test] Eerst \n");
+        System.out.println(adao.findByReiziger(testReiziger));
+        System.out.print("[Test] Na update testAdres  \n");
+        testReiziger = new Reiziger(6, "A", null, "Naisi", java.sql.Date.valueOf("2003-02-03"));
+        testAdres = new Adres(6, "9876ZZ", "69", "Nietwegweg", "Puttn", testReiziger);
+        adao.update(testAdres);
+        System.out.println(adao.findByReiziger(testReiziger));
+
+        System.out.println();
+
+        System.out.print("[Test] Eerst " + adressen.size() + " adressen, na AdresDAO.delete() met testAdres: ");
+        adao.delete(testAdres);
+        adressen = adao.findAll();
+        System.out.println(adressen.size() + " reizigers\n");
     }
 }
