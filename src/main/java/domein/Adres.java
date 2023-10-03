@@ -46,8 +46,6 @@ public class Adres {
     }
 
     public String toString() {
-        String tussenvoegsel = getReiziger().getTussenvoegsel() == null ? "" : " " + getReiziger().getTussenvoegsel();
-        return String.format("Reiziger {#%s %s.%s %s, geb. %s, Adres {#%s %s-%s}}",
-                getReizigerId(), getReiziger().getVoorletters(), tussenvoegsel, getReiziger().getAchternaam(), getReiziger().getGeboortedatum(), id, postcode, huisnummer);
+        return String.format("#%s, %s-%s", id, postcode, huisnummer);
     }
 }

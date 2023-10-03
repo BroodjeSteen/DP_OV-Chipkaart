@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface AdresDAO {
-    public boolean save(Adres adres) throws SQLException;
-    public boolean update(Adres adres) throws SQLException;
-    public boolean delete(Adres adres) throws SQLException;
-    public Adres findByReiziger(Reiziger reiziger) throws SQLException;
-    public List<Adres> findAll() throws SQLException;
+    boolean save(Adres adres) throws SQLException;
+    boolean update(Adres adres) throws SQLException;
+    boolean delete(Adres adres) throws SQLException;
+    Adres findByReiziger(Reiziger reiziger) throws SQLException;
+    List<Adres> findAll() throws SQLException;
 }

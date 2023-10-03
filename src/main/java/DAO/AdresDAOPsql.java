@@ -14,9 +14,9 @@ public class AdresDAOPsql implements AdresDAO {
     private Connection conn;
     private ReizigerDAO rdao;
 
-    public AdresDAOPsql(Connection conn, ReizigerDAO rdao) {
+    public AdresDAOPsql(Connection conn) {
         this.conn = conn;
-        this.rdao = rdao;
+        rdao = new ReizigerDAOPsql(conn);
     }
 
     @Override
@@ -84,7 +84,10 @@ public class AdresDAOPsql implements AdresDAO {
 
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
-            return new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rdao.findById(rs.getInt(6)));
+            Reiziger r = rdao.findById(rs.getInt(6));
+            Adres a = new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), r);
+            r.setAdres(a);
+            return a;
         }
         rs.close();
         preparedStatement.close();
@@ -99,7 +102,10 @@ public class AdresDAOPsql implements AdresDAO {
         List<Adres> adressen = new ArrayList<>();
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
-            adressen.add(new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rdao.findById(rs.getInt(6))));
+            Reiziger r = rdao.findById(rs.getInt(6));
+            Adres a = new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), r);
+            r.setAdres(a);
+            adressen.add(a);
         }
         rs.close();
         preparedStatement.close();
