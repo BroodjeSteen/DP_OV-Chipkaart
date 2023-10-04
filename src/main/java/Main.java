@@ -15,7 +15,10 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         ReizigerDAOPsql rdao = new ReizigerDAOPsql(getConnection());
 //        AdresDAOPsql adao = new AdresDAOPsql(getConnection());
-//        OVChipkaartDAOPsql odao = new OVChipkaartDAOPsql(getConnection());
+        OVChipkaartDAOPsql odao = new OVChipkaartDAOPsql(getConnection());
+
+        rdao.setOdao(odao);
+        odao.setRdao(rdao);
 
         testReizigerDAO(rdao);
         //testAdresDAO(adao);

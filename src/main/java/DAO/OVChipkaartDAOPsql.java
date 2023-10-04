@@ -16,7 +16,10 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
     public OVChipkaartDAOPsql(Connection conn) {
         this.conn = conn;
-        rdao = new ReizigerDAOPsql(conn);
+    }
+
+    public void setRdao(ReizigerDAO rdao) {
+        this.rdao = rdao;
     }
 
     @Override

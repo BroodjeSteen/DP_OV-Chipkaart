@@ -14,8 +14,10 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
     public ReizigerDAOPsql(Connection conn) {
         this.conn = conn;
-        adao = new AdresDAOPsql(conn);
-        odao = new OVChipkaartDAOPsql(conn);
+    }
+
+    public void setOdao(OVChipkaartDAO odao) {
+        this.odao = odao;
     }
 
     @Override
