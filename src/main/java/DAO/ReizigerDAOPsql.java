@@ -20,6 +20,10 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         this.odao = odao;
     }
 
+    public void setAdao(AdresDAO adao) {
+        this.adao = adao;
+    }
+
     @Override
     public boolean save(Reiziger reiziger) throws SQLException {
         String insertQuery = "INSERT INTO reiziger (reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum) VALUES (?, ?, ?, ?, ?)";
@@ -34,7 +38,15 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         int rowsInserted = preparedStatement.executeUpdate();
         preparedStatement.close();
 
-        for (OVChipkaart ovChipkaart : reiziger.getOVChipkaarten()) odao.save(ovChipkaart);
+        if (adao != null && reiziger.getAdres() != null) {
+            adao.save(reiziger.getAdres());
+        }
+
+        if (odao != null) {
+            for (OVChipkaart ovChipkaart : reiziger.getOVChipkaarten()) {
+                odao.save(ovChipkaart);
+            }
+        }
 
         return rowsInserted > 0;
     }
@@ -53,14 +65,30 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         int rowsAffected = preparedStatement.executeUpdate();
         preparedStatement.close();
 
-        for (OVChipkaart ovChipkaart : reiziger.getOVChipkaarten()) odao.update(ovChipkaart);
+        if (adao != null && reiziger.getAdres() != null) {
+            adao.update(reiziger.getAdres());
+        }
+
+        if (odao != null) {
+            for (OVChipkaart ovChipkaart : reiziger.getOVChipkaarten()) {
+                odao.update(ovChipkaart);
+            }
+        }
 
         return rowsAffected > 0;
     }
 
     @Override
     public boolean delete(Reiziger reiziger) throws SQLException {
-        for (OVChipkaart ovChipkaart : reiziger.getOVChipkaarten()) odao.delete(ovChipkaart);
+        if (adao != null && reiziger.getAdres() != null) {
+            adao.delete(reiziger.getAdres());
+        }
+
+        if (odao != null) {
+            for (OVChipkaart ovChipkaart : reiziger.getOVChipkaarten()) {
+                odao.delete(ovChipkaart);
+            }
+        }
 
         String deleteQuery = "DELETE FROM reiziger WHERE reiziger_id = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
@@ -82,7 +110,12 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
             Reiziger reiziger = new Reiziger(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5));
-            for (OVChipkaart ovChipkaart : odao.findByReiziger(reiziger)) reiziger.addOVChipkaart(ovChipkaart);
+
+            reiziger.setAdres(adao.findByReiziger(reiziger));
+
+            for (OVChipkaart ovChipkaart : odao.findByReiziger(reiziger)) {
+                reiziger.addOVChipkaart(ovChipkaart);
+            }
 
             return reiziger;
         }
@@ -103,7 +136,12 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
             Reiziger reiziger = new Reiziger(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5));
-            for (OVChipkaart ovChipkaart : odao.findByReiziger(reiziger)) reiziger.addOVChipkaart(ovChipkaart);
+
+            reiziger.setAdres(adao.findByReiziger(reiziger));
+
+            for (OVChipkaart ovChipkaart : odao.findByReiziger(reiziger)) {
+                reiziger.addOVChipkaart(ovChipkaart);
+            }
 
             reizigers.add(reiziger);
         }
@@ -115,12 +153,17 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     @Override
     public List<Reiziger> findAll() throws SQLException {
         Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM reiziger");
+        ResultSet rs = st.executeQuery("SELECT * FROM reiziger ORDER BY reiziger_id ASC");
 
         List<Reiziger> reizigers = new ArrayList<>();
         while (rs.next()) {
             Reiziger reiziger = new Reiziger(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5));
-            for (OVChipkaart ovChipkaart : odao.findByReiziger(reiziger)) reiziger.addOVChipkaart(ovChipkaart);
+
+            reiziger.setAdres(adao.findByReiziger(reiziger));
+
+            for (OVChipkaart ovChipkaart : odao.findByReiziger(reiziger)) {
+                reiziger.addOVChipkaart(ovChipkaart);
+            }
 
             reizigers.add(reiziger);
         }

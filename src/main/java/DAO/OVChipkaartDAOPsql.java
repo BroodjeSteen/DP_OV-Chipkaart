@@ -12,6 +12,7 @@ import java.util.List;
 
 public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     private Connection conn;
+    private AdresDAO adao;
     private ReizigerDAO rdao;
 
     public OVChipkaartDAOPsql(Connection conn) {
@@ -79,7 +80,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         List<OVChipkaart> ovChipkaarten = new ArrayList<>();
         ResultSet rs = preparedStatement.executeQuery();
 
-        while (rs.next()) ovChipkaarten.add(new OVChipkaart(rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getDouble(4), rdao.findById(rs.getInt(5))));
+        while (rs.next()) ovChipkaarten.add(new OVChipkaart(rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getDouble(4), reiziger));
 
         rs.close();
         preparedStatement.close();
