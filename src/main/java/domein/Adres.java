@@ -6,15 +6,15 @@ public class Adres {
     private String huisnummer;
     private String straat;
     private String woonplaats;
-    private Reiziger reiziger;
+    private int reizigerId;
 
-    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, Reiziger reiziger) {
+    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, int reizigerId) {
         this.id = id;
         this.postcode = postcode;
         this.huisnummer = huisnummer;
         this.straat = straat;
         this.woonplaats = woonplaats;
-        this.reiziger = reiziger;
+        this.reizigerId = reizigerId;
     }
 
     public int getId() {
@@ -37,12 +37,8 @@ public class Adres {
         return woonplaats;
     }
 
-    public Reiziger getReiziger() {
-        return reiziger;
-    }
-
     public int getReizigerId() {
-        return reiziger.getReizigerId();
+        return reizigerId;
     }
 
     public String toString() {

@@ -32,7 +32,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         preparedStatement.setDate(2, ovChipkaart.getGeldigTot());
         preparedStatement.setInt(3, ovChipkaart.getKlasse());
         preparedStatement.setDouble(4, ovChipkaart.getSaldo());
-        preparedStatement.setInt(5, ovChipkaart.getReiziger().getReizigerId());
+        preparedStatement.setInt(5, ovChipkaart.getReizigerId());
 
         int rowsInserted = preparedStatement.executeUpdate();
 
@@ -48,7 +48,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         preparedStatement.setDate(1, ovChipkaart.getGeldigTot());
         preparedStatement.setInt(2, ovChipkaart.getKlasse());
         preparedStatement.setDouble(3, ovChipkaart.getSaldo());
-        preparedStatement.setInt(4, ovChipkaart.getReiziger().getReizigerId());
+        preparedStatement.setInt(4, ovChipkaart.getReizigerId());
         preparedStatement.setInt(5, ovChipkaart.getKaartNummer());
 
         int rowsAffected = preparedStatement.executeUpdate();
@@ -80,7 +80,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         List<OVChipkaart> ovChipkaarten = new ArrayList<>();
         ResultSet rs = preparedStatement.executeQuery();
 
-        while (rs.next()) ovChipkaarten.add(new OVChipkaart(rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getDouble(4), reiziger));
+        while (rs.next()) ovChipkaarten.add(new OVChipkaart(rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getDouble(4), reiziger.getReizigerId()));
 
         rs.close();
         preparedStatement.close();

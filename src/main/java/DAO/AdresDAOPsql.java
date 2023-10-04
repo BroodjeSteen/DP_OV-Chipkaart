@@ -81,7 +81,7 @@ public class AdresDAOPsql implements AdresDAO {
 
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
-            Adres a = new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), reiziger);
+            Adres a = new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), reiziger.getReizigerId());
             return a;
         }
         rs.close();
@@ -98,7 +98,7 @@ public class AdresDAOPsql implements AdresDAO {
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
             Reiziger r = rdao.findById(rs.getInt(6));
-            Adres a = new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), r);
+            Adres a = new Adres(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), r.getReizigerId());
             r.setAdres(a);
             adressen.add(a);
         }
