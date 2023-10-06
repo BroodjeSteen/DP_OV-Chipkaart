@@ -1,12 +1,14 @@
 package domein;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
     private int productNummer;
     private String naam;
     private String beschrijving;
     private double prijs;
+    private List<Integer> ovChipkaartNummers = new ArrayList<>();
 
     public Product(int productNummer, String naam, String beschrijving, double prijs) {
         this.productNummer = productNummer;
@@ -29,5 +31,17 @@ public class Product {
 
     public double getPrijs() {
         return prijs;
+    }
+
+    public List<Integer> getOVChipkaartNummers() {
+        return ovChipkaartNummers;
+    }
+
+    public void addOVChipkaartNummer(int ovChipkaartNummer) {
+        ovChipkaartNummers.add(ovChipkaartNummer);
+    }
+
+    public String toString() {
+        return String.format("#%s, naam: %s, beschrijving: %s, prijs: €%s", productNummer, naam, beschrijving, prijs);
     }
 }

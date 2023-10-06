@@ -1,6 +1,7 @@
 package DAO;
 
 import domein.OVChipkaart;
+import domein.Product;
 import domein.Reiziger;
 
 import java.sql.Connection;
@@ -12,15 +13,14 @@ import java.util.List;
 
 public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     private Connection conn;
-    private AdresDAO adao;
-    private ReizigerDAO rdao;
+    private ProductDAO pdao;
 
     public OVChipkaartDAOPsql(Connection conn) {
         this.conn = conn;
     }
 
-    public void setRdao(ReizigerDAO rdao) {
-        this.rdao = rdao;
+    public void setPdao(ProductDAO pdao) {
+        this.pdao = pdao;
     }
 
     @Override
@@ -37,6 +37,13 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         int rowsInserted = preparedStatement.executeUpdate();
 
         preparedStatement.close();
+
+        if (pdao != null) {
+            for (Product product : ovChipkaart.getProducten()) {
+                pdao.save(product);
+            }
+        }
+
         return rowsInserted > 0;
     }
 
@@ -54,11 +61,24 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         int rowsAffected = preparedStatement.executeUpdate();
 
         preparedStatement.close();
+
+        if (pdao != null) {
+            for (Product product : ovChipkaart.getProducten()) {
+                pdao.update(product);
+            }
+        }
+
         return rowsAffected > 0;
     }
 
     @Override
     public boolean delete(OVChipkaart ovChipkaart) throws SQLException {
+        if (pdao != null) {
+            for (Product product : ovChipkaart.getProducten()) {
+                pdao.delete(product);
+            }
+        }
+
         String deleteQuery = "DELETE FROM ov_chipkaart WHERE kaart_nummer = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
 
@@ -80,7 +100,13 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         List<OVChipkaart> ovChipkaarten = new ArrayList<>();
         ResultSet rs = preparedStatement.executeQuery();
 
-        while (rs.next()) ovChipkaarten.add(new OVChipkaart(rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getDouble(4), reiziger.getReizigerId()));
+        while (rs.next()) {
+            OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getDouble(4), reiziger.getReizigerId());
+            for (Product product : pdao.findByOVChipkaart(ovChipkaart)) {
+                ovChipkaart.addProduct(product);
+            }
+            ovChipkaarten.add(ovChipkaart);
+        }
 
         rs.close();
         preparedStatement.close();

@@ -15,10 +15,11 @@ public class Main {
         ReizigerDAOPsql rdao = new ReizigerDAOPsql(getConnection());
         AdresDAOPsql adao = new AdresDAOPsql(getConnection());
         OVChipkaartDAOPsql odao = new OVChipkaartDAOPsql(getConnection());
+        ProductDAO pdao = new ProductDAOPsql(getConnection());
 
         rdao.setOdao(odao);
-        odao.setRdao(rdao);
         rdao.setAdao(adao);
+        odao.setPdao(pdao);
 
         testReizigerDAO(rdao);
         //testAdresDAO(adao);
@@ -142,6 +143,5 @@ public class Main {
         r.addOVChipkaart(ov2);
 
         rdao.delete(r);
-
     }
 }

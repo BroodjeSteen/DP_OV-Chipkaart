@@ -1,6 +1,8 @@
 package domein;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OVChipkaart {
     private int kaartNummer;
@@ -8,6 +10,7 @@ public class OVChipkaart {
     private int klasse;
     private double saldo;
     private int reizigerId;
+    private List<Product> producten = new ArrayList<>();
 
     public OVChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo, int reizigerId) {
         this.kaartNummer = kaartNummer;
@@ -37,7 +40,15 @@ public class OVChipkaart {
         return reizigerId;
     }
 
+    public List<Product> getProducten() {
+        return producten;
+    }
+
+    public void addProduct(Product product) {
+        producten.add(product);
+    }
+
     public String toString() {
-        return String.format("#%s, geldig tot: %s, klasse: %s, saldo: €%s", kaartNummer, geldigTot, klasse, saldo);
+        return String.format("#%s, geldig tot: %s, klasse: %s, saldo: €%s, Producten: {%s}", kaartNummer, geldigTot, klasse, saldo, producten);
     }
 }
