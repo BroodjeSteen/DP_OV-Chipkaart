@@ -74,7 +74,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     @Override
     public boolean delete(OVChipkaart ovChipkaart) throws SQLException {
         if (pdao != null) {
-            for (Product product : ovChipkaart.getProducten()) {
+            for (Product product : pdao.findByOVChipkaart(ovChipkaart)) {
                 pdao.delete(product);
             }
         }

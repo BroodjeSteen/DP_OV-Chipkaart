@@ -1,6 +1,7 @@
 import DAO.*;
 import domein.Adres;
 import domein.OVChipkaart;
+import domein.Product;
 import domein.Reiziger;
 
 import java.sql.*;
@@ -40,14 +41,22 @@ public class Main {
 
     private static void testReizigerDAO(ReizigerDAO rdao) throws SQLException {
         // Initialize objects for tests
+        Product p1 = new Product(7, "Dagkaart 1e klas", "Een hele dag onbeperkt reizen met de trein.", 75.80);
+        Product p2 = new Product(8, "Cheat code", "Onbeperkt reizen in 1e klas", 0);
+
         Reiziger sietske = new Reiziger(77, "S", null, "Boers", java.sql.Date.valueOf("1981-03-14"));
         Adres adres = new Adres(77, "9876ZZ", "14A", "Hamburgerweg", "Duckstad", sietske.getReizigerId());
         OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2023-12-31"), 1, 50.00, sietske.getReizigerId());
         OVChipkaart ov2 = new OVChipkaart(98765, java.sql.Date.valueOf("2024-01-01"), 1, 420.69, sietske.getReizigerId());
+        ov1.addProduct(p1);
+        ov1.addProduct(p2);
+        ov2.addProduct(p1);
         sietske.setAdres(adres);
         sietske.addOVChipkaart(ov1);
         sietske.addOVChipkaart(ov2);
 
+        System.out.println(p1.getOVChipkaartNummers());
+        System.out.println(p2.getOVChipkaartNummers());
 
         System.out.println("\n---------- Test ReizigerDAO -------------");
 

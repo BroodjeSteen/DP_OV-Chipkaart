@@ -96,7 +96,7 @@ public class ProductDAOPsql implements ProductDAO {
     @Override
     public boolean delete(Product product) throws SQLException {
         for (int ovChipkaartNummer : product.getOVChipkaartNummers()) {
-            String deleteQuery = "DELETE FROM ov_chipkaart_product WHERE kaartnummer = ? AND product_nummer = ?";
+            String deleteQuery = "DELETE FROM ov_chipkaart_product WHERE kaart_nummer = ? AND product_nummer = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
 
             preparedStatement.setInt(1, ovChipkaartNummer);

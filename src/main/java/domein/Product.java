@@ -42,6 +42,6 @@ public class Product {
     }
 
     public String toString() {
-        return String.format("#%s, naam: %s, beschrijving: %s, prijs: €%s", productNummer, naam, beschrijving, prijs);
+        return String.format("#%s, %s, %s, €%s", productNummer, naam, beschrijving, prijs);
     }
 }

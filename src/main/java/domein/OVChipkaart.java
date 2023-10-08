@@ -46,6 +46,7 @@ public class OVChipkaart {
 
     public void addProduct(Product product) {
         producten.add(product);
+        product.addOVChipkaartNummer(this.kaartNummer);
     }
 
     public String toString() {
