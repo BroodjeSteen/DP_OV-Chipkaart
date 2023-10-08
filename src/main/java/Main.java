@@ -50,7 +50,7 @@ public class Main {
         OVChipkaart ov2 = new OVChipkaart(98765, java.sql.Date.valueOf("2024-01-01"), 1, 420.69, sietske.getReizigerId());
         ov1.addProduct(p1);
         ov1.addProduct(p2);
-        ov2.addProduct(p1);
+        //ov2.addProduct(p1);
         sietske.setAdres(adres);
         sietske.addOVChipkaart(ov1);
         sietske.addOVChipkaart(ov2);

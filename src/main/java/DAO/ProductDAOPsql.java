@@ -39,13 +39,12 @@ public class ProductDAOPsql implements ProductDAO {
             preparedStatement.setInt(1, ovChipkaartNummer);
             preparedStatement.setInt(2, product.getProductNummer());
             preparedStatement.setString(3, "gekocht");
-            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-04-10"));
+            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-10-08"));
 
             rowsInserted = preparedStatement.executeUpdate();
 
             preparedStatement.close();
         }
-
 
         return rowsInserted > 0;
     }
@@ -71,7 +70,7 @@ public class ProductDAOPsql implements ProductDAO {
             preparedStatement.setInt(1, ovChipkaartNummer);
             preparedStatement.setInt(2, product.getProductNummer());
             preparedStatement.setString(3, "gekocht");
-            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-04-10"));
+            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-10-08"));
 
             int rowsInserted = preparedStatement.executeUpdate();
 
