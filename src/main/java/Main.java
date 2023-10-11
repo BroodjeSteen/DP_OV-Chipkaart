@@ -24,7 +24,7 @@ public class Main {
 
         testReizigerDAO(rdao);
         //testAdresDAO(adao);
-        //testOVChipkaartDAOPsql(rdao);
+        //testOVChipkaartDAOPsql(odao);
     }
 
     private static Connection getConnection() throws SQLException {
@@ -48,9 +48,11 @@ public class Main {
         Adres adres = new Adres(77, "9876ZZ", "14A", "Hamburgerweg", "Duckstad", sietske.getReizigerId());
         OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2023-12-31"), 1, 50.00, sietske.getReizigerId());
         OVChipkaart ov2 = new OVChipkaart(98765, java.sql.Date.valueOf("2024-01-01"), 1, 420.69, sietske.getReizigerId());
+
         ov1.addProduct(p1);
         ov1.addProduct(p2);
-        //ov2.addProduct(p1);
+        ov2.addProduct(p1);
+
         sietske.setAdres(adres);
         sietske.addOVChipkaart(ov1);
         sietske.addOVChipkaart(ov2);
@@ -90,11 +92,18 @@ public class Main {
 
         System.out.println();
 
+        p2 = new Product(8, "Zeer duur", "Betaal je blut", 999999);
+
         // Initialze objects again with updated data
         sietske = new Reiziger(77, "A", null, "Koppes", java.sql.Date.valueOf("2003-01-07"));
         adres = new Adres(77, "1234AB", "69", "Wegweg", "Duckstad", sietske.getReizigerId());
         ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2024-05-04"), 2, 0.01, sietske.getReizigerId());
         ov2 = new OVChipkaart(98765, java.sql.Date.valueOf("2024-05-05"), 2, 999.99, sietske.getReizigerId());
+
+        ov1.addProduct(p1);
+        ov2.addProduct(p1);
+        ov2.addProduct(p2);
+
         sietske.setAdres(adres);
         sietske.addOVChipkaart(ov1);
         sietske.addOVChipkaart(ov2);
@@ -144,13 +153,10 @@ public class Main {
         System.out.println(adressen.size() + " reizigers\n");
     }
 
-    public static void testOVChipkaartDAOPsql(ReizigerDAOPsql rdao) throws SQLException {
-        Reiziger r = new Reiziger(77, "A", null, "Koppes", java.sql.Date.valueOf("2003-01-07"));
-        OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2023-12-31"), 1, 50.00, r.getReizigerId());
-        OVChipkaart ov2 = new OVChipkaart(98765, java.sql.Date.valueOf("2024-01-01"), 1, 420.69, r.getReizigerId());
-        r.addOVChipkaart(ov1);
-        r.addOVChipkaart(ov2);
-
-        rdao.delete(r);
+    public static void testOVChipkaartDAOPsql(OVChipkaartDAO odao) throws SQLException {
+        Reiziger sietske = new Reiziger(77, "S", null, "Boers", java.sql.Date.valueOf("1981-03-14"));
+        OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2024-05-04"), 2, 0.01, sietske.getReizigerId());
+        OVChipkaart ov2 = new OVChipkaart(98765, java.sql.Date.valueOf("2024-05-05"), 2, 999.99, sietske.getReizigerId());
+        sietske.addOVChipkaart(ov1);
     }
 }

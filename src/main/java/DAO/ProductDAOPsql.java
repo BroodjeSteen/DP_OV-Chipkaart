@@ -32,53 +32,13 @@ public class ProductDAOPsql implements ProductDAO {
 
         preparedStatement.close();
 
-        for (int ovChipkaartNummer : product.getOVChipkaartNummers()) {
-            insertQuery = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer, status, last_update) VALUES (?, ?, ?, ?)";
-            preparedStatement = conn.prepareStatement(insertQuery);
-
-            preparedStatement.setInt(1, ovChipkaartNummer);
-            preparedStatement.setInt(2, product.getProductNummer());
-            preparedStatement.setString(3, "gekocht");
-            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-10-08"));
-
-            rowsInserted = preparedStatement.executeUpdate();
-
-            preparedStatement.close();
-        }
-
         return rowsInserted > 0;
     }
 
     @Override
     public boolean update(Product product) throws SQLException {
-        // Verwijder alle producten van de OVChipkaart
-        // todo verwijderd producten van alle kaarten
-        String deleteQuery = "DELETE FROM ov_chipkaart_product WHERE product_nummer = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
-
-        preparedStatement.setInt(1, product.getProductNummer());
-
-        int rowsDeleted = preparedStatement.executeUpdate();
-
-        preparedStatement.close();
-
-        // Zet alle producten terug die over zijn
-        for (int ovChipkaartNummer : product.getOVChipkaartNummers()) {
-            String insertQuery = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer, status, last_update) VALUES (?, ?, ?, ?)";
-            preparedStatement = conn.prepareStatement(insertQuery);
-
-            preparedStatement.setInt(1, ovChipkaartNummer);
-            preparedStatement.setInt(2, product.getProductNummer());
-            preparedStatement.setString(3, "gekocht");
-            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-10-08"));
-
-            int rowsInserted = preparedStatement.executeUpdate();
-
-            preparedStatement.close();
-        }
-
         String updateQuery = "UPDATE product SET naam = ?, beschrijving = ?, prijs = ? WHERE product_nummer = ?";
-        preparedStatement = conn.prepareStatement(updateQuery);
+        PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
 
         preparedStatement.setString(1, product.getNaam());
         preparedStatement.setString(2, product.getBeschrijving());
@@ -94,18 +54,6 @@ public class ProductDAOPsql implements ProductDAO {
 
     @Override
     public boolean delete(Product product) throws SQLException {
-        for (int ovChipkaartNummer : product.getOVChipkaartNummers()) {
-            String deleteQuery = "DELETE FROM ov_chipkaart_product WHERE kaart_nummer = ? AND product_nummer = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
-
-            preparedStatement.setInt(1, ovChipkaartNummer);
-            preparedStatement.setInt(2, product.getProductNummer());
-
-            int rowsDeleted = preparedStatement.executeUpdate();
-
-            preparedStatement.close();
-        }
-
         String deleteQuery = "DELETE FROM product WHERE product_nummer = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
 

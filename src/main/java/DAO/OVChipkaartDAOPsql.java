@@ -40,8 +40,24 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
         if (pdao != null) {
             for (Product product : ovChipkaart.getProducten()) {
-                pdao.save(product);
+                try {
+                    pdao.save(product);
+                } catch (SQLException e) {}
             }
+        }
+
+        for (Product product : ovChipkaart.getProducten()) {
+            insertQuery = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer, status, last_update) VALUES (?, ?, ?, ?)";
+            preparedStatement = conn.prepareStatement(insertQuery);
+
+            preparedStatement.setInt(1, ovChipkaart.getKaartNummer());
+            preparedStatement.setInt(2, product.getProductNummer());
+            preparedStatement.setString(3, "gekocht");
+            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-10-08"));
+
+            rowsInserted = preparedStatement.executeUpdate();
+
+            preparedStatement.close();
         }
 
         return rowsInserted > 0;
@@ -49,8 +65,32 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
     @Override
     public boolean update(OVChipkaart ovChipkaart) throws SQLException {
+        String deleteQuery = "DELETE FROM ov_chipkaart_product WHERE kaart_nummer = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
+
+        preparedStatement.setInt(1, ovChipkaart.getKaartNummer());
+
+        int rowsDeleted = preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+
+        for (Product product : ovChipkaart.getProducten()) {
+            String insertQuery = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer, status, last_update) VALUES (?, ?, ?, ?)";
+            preparedStatement = conn.prepareStatement(insertQuery);
+
+            preparedStatement.setInt(1, ovChipkaart.getKaartNummer());
+            preparedStatement.setInt(2, product.getProductNummer());
+            preparedStatement.setString(3, "gekocht");
+            preparedStatement.setDate(4, java.sql.Date.valueOf("2023-10-08"));
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+        }
+
+
         String updateQuery = "UPDATE ov_chipkaart SET geldig_tot = ?, klasse = ?, saldo = ?, reiziger_id = ? WHERE kaart_nummer = ?";
-        PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
+        preparedStatement = conn.prepareStatement(updateQuery);
 
         preparedStatement.setDate(1, ovChipkaart.getGeldigTot());
         preparedStatement.setInt(2, ovChipkaart.getKlasse());
@@ -73,6 +113,18 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
     @Override
     public boolean delete(OVChipkaart ovChipkaart) throws SQLException {
+        for (Product product : pdao.findByOVChipkaart(ovChipkaart)) {
+            String deleteQuery = "DELETE FROM ov_chipkaart_product WHERE kaart_nummer = ? AND product_nummer = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(deleteQuery);
+
+            preparedStatement.setInt(1, ovChipkaart.getKaartNummer());
+            preparedStatement.setInt(2, product.getProductNummer());
+
+            int rowsDeleted = preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+        }
+
         if (pdao != null) {
             for (Product product : pdao.findByOVChipkaart(ovChipkaart)) {
                 pdao.delete(product);
